@@ -44,7 +44,7 @@ h1{font-size:112px;line-height:.99;font-weight:800;letter-spacing:-.025em;color:
 <h1>__HEAD__ <span class="red">__REDWORD__<svg class="arrow" viewBox="0 0 24 24" fill="none" stroke="__ACCENT__" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M7 7l10 10"/><path d="M17 8v9h-9"/></svg></span></h1></div>
 <div class="data"><div class="stat"><div class="num">__NUM__</div><div class="lbl">__LBL__</div></div><div class="spacer"></div><div class="src">__SRC__</div></div>
 </div>
-<div class="handle"><b>__WA__<i>__WB__</i></b></div>
+<div class="handle"><b>@__WA__<i>__WB__</i></b></div>
 </body></html>"""
 
 def hx(h, a):
@@ -62,6 +62,13 @@ def build(acc, p):
     }
     html = TPL
     for k,v in rep.items(): html = html.replace(k, v)
+    if not p.get("num"):
+        # tanpa angka sorotan: sembunyikan strip data
+        html = html.replace('<div class="data">', '<div class="data" style="display:none">')
+        # headline turun ke tengah biar ga ada ruang kosong di bawah
+        html = html.replace('<div class="headline">', '<div class="headline" style="margin:auto 0;padding-bottom:60px">')
+    if p.get("arrow", True) is False:
+        html = re.sub(r'<svg class="arrow".*?</svg>', '', html, flags=re.S)
     return html
 
 def main():
